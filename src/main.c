@@ -1,7 +1,8 @@
 #include "inputs.h"
 #include "kdtree.h"
-#include <time.h>
 #include "convexHull.h"
+#include <time.h>
+
 
 #define SHOW 1
 
