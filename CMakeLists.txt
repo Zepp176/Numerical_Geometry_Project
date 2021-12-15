@@ -8,6 +8,7 @@ add_executable(${EXEC}
                "${CMAKE_CURRENT_SOURCE_DIR}/src/main.c"
                "${CMAKE_CURRENT_SOURCE_DIR}/src/inputs.c"
                "${CMAKE_CURRENT_SOURCE_DIR}/src/kdtree.c"
+               "${CMAKE_CURRENT_SOURCE_DIR}/src/convexHull.c"
                # you can add other source file here !
                )
 
