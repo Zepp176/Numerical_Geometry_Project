@@ -2,8 +2,8 @@
 #include <math.h>
 
 int righturn(double x1, double x2, double x3, double y1, double y2, double y3 ){
-    double ind = (x1-x3)*(y2-y3) - (x2-x3)*(y1-y3);
-    return ind>pow(10,-15);
+    long double ind = (x1-x3)*(y2-y3) - (x2-x3)*(y1-y3);
+    return ind>=0;
 }
 
 static int compare_x(const void *a_v, const void *b_v)
