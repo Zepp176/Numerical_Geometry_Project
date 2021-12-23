@@ -1,23 +1,10 @@
 Numerical Geometry Project
 ==========================
 
-This folder is the canvas for your upcoming project.
-It should contain:
- * this file (**README.md**)
- * the description of the structure of the program in **CMakeLists.txt**
- * a **src** directory containing the the source code of your program
- * a **doc** directory containing more documentation
- * a **deps** directory containing the BOV library
+Authors : Valentin Coenen, Victor Belpaire
 
-See [doc/COMPILING.md](doc/COMPILING.md) for a step by step tutorial
-on how to build the program.
+We implemented together the Convex Hull algorithm and the k-d Tree algorithm.
 
-See [doc/tutorial.md](doc/tutorial.md) for a step by step tutorial on
-how to use the BOV library.
-
-See [deps/BOV/include/BOV.h](deps/BOV/include/BOV.h)
-for help on the BOV library functions.
-
-See [deps/BOV/examples/](deps/BOV/examples/) for more
-examples using the BOV library
-
+In order to show the animations for these algorithms, you have to set the value of ALGO_SELECTION to 1 if you want to show the k-d Tree animations or to 2 if you want to show the Convex Hull animations.
+For the Convex Hull algorithm, STEP_CONVEX_HULL has to be set to 1 to show every step of the algorithm. To show only the end result this value can be set to 0.
+For the k-d Tree, ANIM_KD_TREE can be set to 1 to show every subdivision of the space or set to 2 to show only show one side of the subdivision to have a clearer look at the result.
