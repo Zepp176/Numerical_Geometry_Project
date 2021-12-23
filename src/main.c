@@ -5,9 +5,9 @@
 
 
 #define SHOW_ANIM 1 // 1 to show the animations, 0 to disable the animations
-#define ALGO_SELECTION 2 // 1 for k-dtree algorithm, 2 for convex hull algorithm
+#define ALGO_SELECTION 1 // 1 for k-dtree algorithm, 2 for convex hull algorithm
 #define ANIM_KD_TREE 2 // 1 for the first animation, 2 for the second animation for the k-d tree
-#define STEP_CONVEX_HULL 1 // 1 to show the evolution of the algorithm while running, 0 to have directly the result (
+#define STEP_CONVEX_HULL 0  // 1 to show the evolution of the algorithm while running, 0 to have directly the result (
 
 int main()
 {
@@ -17,7 +17,7 @@ int main()
 	srand(seed);
 
 	// Random points are created
-	const GLsizei nPoints = 1000;
+	const GLsizei nPoints = 10000;
 	GLfloat (*coord)[2] = malloc(sizeof(coord[0])*nPoints);
 	random_points(coord, nPoints);
 
@@ -40,9 +40,12 @@ int main()
 		y_high += 0.1*(y_high - y_low);
 
 		// Here the k-d tree is created
-		time_t tic = time(NULL);
+        clock_t tic = clock();
 		kd_node *head = kd_tree(coord, 0, nPoints, 0);
-		time_t tac = time(NULL);
+        clock_t tac = clock();
+        float seconds = (float)(tac - tic) / CLOCKS_PER_SEC;
+
+
 
 		double old_time;
 		int depth = 0;
@@ -82,7 +85,7 @@ int main()
 
 		}
 
-		printf("elapsed time : %ld seconds\n", tac-tic);
+		printf("elapsed time : %f seconds\n", seconds);
 
 		free_kd_tree(head);
 	}
