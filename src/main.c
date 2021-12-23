@@ -7,7 +7,7 @@
 #define SHOW_ANIM 1 // 1 to show the animations, 0 to disable the animations
 #define ALGO_SELECTION 2 // 1 for k-dtree algorithm, 2 for convex hull algorithm
 #define ANIM_KD_TREE 2 // 1 for the first animation, 2 for the second animation for the k-d tree
-#define STEP_CONVEX_HULL 1 // 1 to show the evolution of the algorithm while running, 0 to have directly the result
+#define STEP_CONVEX_HULL 1 // 1 to show the evolution of the algorithm while running, 0 to have directly the result (
 
 int main()
 {
@@ -17,7 +17,7 @@ int main()
 	srand(seed);
 
 	// Random points are created
-	const GLsizei nPoints = 100;
+	const GLsizei nPoints = 1000;
 	GLfloat (*coord)[2] = malloc(sizeof(coord[0])*nPoints);
 	random_points(coord, nPoints);
 
@@ -90,7 +90,7 @@ int main()
     if (ALGO_SELECTION == 2) { // ConvexHull
 
         // Creation of the list we will work on
-        GLfloat (*L)[2] = malloc(sizeof(L)*(nPoints));
+        GLfloat (*L)[2] = malloc(sizeof(L[0])*(nPoints));
 
 
 
@@ -112,7 +112,7 @@ int main()
             if (STEP_CONVEX_HULL) { // display the Convex hull and all the steps of the algorithm
 
                 // Create a list where we will save all the steps done by the program in order to display them
-                GLfloat(*step)[2] = malloc(sizeof(step) * (nPoints) * nPoints);
+                GLfloat(*step)[2] = malloc(sizeof(step[0]) * (nPoints) * nPoints);
                 int *a1 = coordonStep(nPoints, L, step);
                 int numb = a1[0];
                 int nbstep = a1[1];
@@ -136,7 +136,7 @@ int main()
                 bov_points_set_outline_color(coordDraw, (GLfloat[4]) {0.3, 0.12, 0.0, 0.25});
 
                 // List that covers the progress of the  animation
-                GLfloat(*currlist)[2] = malloc(sizeof(currlist) * (nPoints));
+                GLfloat(*currlist)[2] = malloc(sizeof(currlist[0]) * (nPoints));
                 int numbList = 2;
                 currlist[0][0] = step[0][0];
                 currlist[0][1] = step[0][1];
