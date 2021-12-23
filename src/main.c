@@ -17,7 +17,7 @@ int main()
 	srand(seed);
 
 	// Random points are created
-	const GLsizei nPoints = 10000;
+	const GLsizei nPoints = 1000;
 	GLfloat (*coord)[2] = malloc(sizeof(coord[0])*nPoints);
 	random_points(coord, nPoints);
 
