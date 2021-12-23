@@ -47,7 +47,7 @@ void free_kd_tree(kd_node *head) {
     free(head);
 }
 
-void draw_kd_tree(kd_node *head, bov_window_t *window, double x_low, double x_high, double y_low, double y_high, int depth_max, int depth_color) {
+void draw_kd_tree(kd_node *head, bov_window_t *window, double x_low, double x_high, double y_low, double y_high, int depth_max, int depth_color, int anim) {
     if (head == NULL) {return;}
     if (head->depth >= depth_max) {return;}
 
@@ -68,7 +68,7 @@ void draw_kd_tree(kd_node *head, bov_window_t *window, double x_low, double x_hi
     GLfloat color[4];
     nice_colormap(color, ((float) head->depth)/(depth_color-1));
 
-    if (DISPLAY_ONE) {bov_points_set_width(coordDraw, 0.004);}
+    if (anim == 2) {bov_points_set_width(coordDraw, 0.004);}
 	else {bov_points_set_width(coordDraw, 0.002);}
     bov_points_set_color(coordDraw, color);
     bov_lines_draw(window, coordDraw, 0, 2);
@@ -76,19 +76,19 @@ void draw_kd_tree(kd_node *head, bov_window_t *window, double x_low, double x_hi
     bov_points_delete(coordDraw);
     free(line);
 
-    if (DISPLAY_ONE) {
-        if (head->depth % 4 == 0) {draw_kd_tree(head->left, window, x_low, head->x, y_low, y_high, depth_max, depth_color);}
-        if (head->depth % 4 == 2) {draw_kd_tree(head->right, window, head->x, x_high, y_low, y_high, depth_max, depth_color);}
-        if (head->depth % 4 == 1) {draw_kd_tree(head->left, window, x_low, x_high, y_low, head->y, depth_max, depth_color);}
-        if (head->depth % 4 == 3) {draw_kd_tree(head->right, window, x_low, x_high, head->y, y_high, depth_max, depth_color);}
+    if (anim == 2) {
+        if (head->depth % 4 == 0) {draw_kd_tree(head->left, window, x_low, head->x, y_low, y_high, depth_max, depth_color, anim);}
+        if (head->depth % 4 == 2) {draw_kd_tree(head->right, window, head->x, x_high, y_low, y_high, depth_max, depth_color, anim);}
+        if (head->depth % 4 == 1) {draw_kd_tree(head->left, window, x_low, x_high, y_low, head->y, depth_max, depth_color, anim);}
+        if (head->depth % 4 == 3) {draw_kd_tree(head->right, window, x_low, x_high, head->y, y_high, depth_max, depth_color, anim);}
     }
     else {
         if (head->depth % 2 == 0) {
-            draw_kd_tree(head->left, window, x_low, head->x, y_low, y_high, depth_max, depth_color);
-            draw_kd_tree(head->right, window, head->x, x_high, y_low, y_high, depth_max, depth_color);
+            draw_kd_tree(head->left, window, x_low, head->x, y_low, y_high, depth_max, depth_color, anim);
+            draw_kd_tree(head->right, window, head->x, x_high, y_low, y_high, depth_max, depth_color, anim);
         } else {
-            draw_kd_tree(head->left, window, x_low, x_high, y_low, head->y, depth_max, depth_color);
-            draw_kd_tree(head->right, window, x_low, x_high, head->y, y_high, depth_max, depth_color);
+            draw_kd_tree(head->left, window, x_low, x_high, y_low, head->y, depth_max, depth_color, anim);
+            draw_kd_tree(head->right, window, x_low, x_high, head->y, y_high, depth_max, depth_color, anim);
         }
     }
 }

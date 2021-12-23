@@ -4,84 +4,90 @@
 #include <time.h>
 
 
-#define SHOW 0
-#define ALGO  2 // for k-dtreealgorithm, 2 for convex hull algorithm
-#define STEP 0 // for convex hull : 1 to show the evolution of the algorithm while running, 0 to have directly the result
-
+#define SHOW_ANIM 1 // 1 to show the animations, 0 to disable the animations
+#define ALGO_SELECTION 2 // 1 for k-dtree algorithm, 2 for convex hull algorithm
+#define ANIM_KD_TREE 1 // 1 for the first animation, 2 for the second animation for the k-d tree
+#define STEP_CONVEX_HULL 0 // 1 to show the evolution of the algorithm while running, 0 to have directly the result
 
 int main()
 {
 
+	float anim_rate = 0.5;
 	int seed = (int) time(NULL);
 	srand(seed);
 
+	// Random points are created
 	const GLsizei nPoints = 1000;
 	GLfloat (*coord)[2] = malloc(sizeof(coord[0])*nPoints);
-
 	random_points(coord, nPoints);
 
+    if (ALGO_SELECTION == 1) {
 
-    if (ALGO==1){
-	double x_low = coord[0][0], x_high = coord[0][0];
-	double y_low = coord[0][1], y_high = coord[0][1];
-	for (int i = 0; i < nPoints; i++) {
-		if (coord[i][0] < x_low) {x_low = coord[i][0];}
-		if (coord[i][0] > x_high) {x_high = coord[i][0];}
-		if (coord[i][1] < y_low) {y_low = coord[i][1];}
-		if (coord[i][1] > y_high) {y_high = coord[i][1];}
-	}
-	x_low -= 0.1*(x_high - x_low);
-	x_high += 0.1*(x_high - x_low);
-	y_low -= 0.1*(y_high - y_low);
-	y_high += 0.1*(y_high - y_low);
-
-	time_t tic = time(NULL);
-	kd_node *head = kd_tree(coord, 0, nPoints, 0);
-	time_t tac = time(NULL);
-
-	double old_time;
-	int depth = 0;
-	int depth_max = compute_max_depth(head);
-	printf("%d\n", depth_max);
-
-	if (SHOW) {
-		bov_window_t* window = bov_window_new(800, 800, "k-d tree");
-		bov_window_set_color(window, (GLfloat[]){1.0f, 1.0f, 1.0f, 1.0f});
-
-		bov_points_t *coordDraw = bov_points_new(coord, nPoints, GL_STATIC_DRAW);
-		bov_points_set_color(coordDraw, (GLfloat[4]) {0.0, 0.0, 0.0, 0.5});
-		bov_points_set_outline_color(coordDraw, (GLfloat[4]) {0.3, 0.12, 0.0, 0.25});
-
-		old_time = bov_window_get_time(window);
-
-		while(!bov_window_should_close(window)){
-			draw_frame(window, x_low, x_high, y_low, y_high);
-
-			bov_points_set_width(coordDraw, 0.005);
-
-			if (bov_window_get_time(window) - old_time > 0.5) {
-				old_time = bov_window_get_time(window);
-				depth += 1;
-				if (depth > depth_max) {depth = 0;}
-			}
-
-			bov_points_draw(window, coordDraw, 0, nPoints);
-			draw_kd_tree(head, window, x_low, x_high, y_low, y_high, depth, depth_max);
-
-			bov_window_update(window);
+		// We find the max and the min
+		double x_low = coord[0][0], x_high = coord[0][0];
+		double y_low = coord[0][1], y_high = coord[0][1];
+		for (int i = 0; i < nPoints; i++) {
+			if (coord[i][0] < x_low) {x_low = coord[i][0];}
+			if (coord[i][0] > x_high) {x_high = coord[i][0];}
+			if (coord[i][1] < y_low) {y_low = coord[i][1];}
+			if (coord[i][1] > y_high) {y_high = coord[i][1];}
 		}
 
-		bov_points_delete(coordDraw);
-		free(coord);
-		bov_window_delete(window);
+		// The limits of the frame are set
+		x_low -= 0.1*(x_high - x_low);
+		x_high += 0.1*(x_high - x_low);
+		y_low -= 0.1*(y_high - y_low);
+		y_high += 0.1*(y_high - y_low);
 
+		// Here the k-d tree is created
+		time_t tic = time(NULL);
+		kd_node *head = kd_tree(coord, 0, nPoints, 0);
+		time_t tac = time(NULL);
+
+		double old_time;
+		int depth = 0;
+		int depth_max = compute_max_depth(head);
+		printf("%d\n", depth_max);
+
+		// The animation
+		if (SHOW_ANIM) {
+			bov_window_t* window = bov_window_new(800, 800, "k-d tree");
+			bov_window_set_color(window, (GLfloat[]){1.0f, 1.0f, 1.0f, 1.0f});
+
+			bov_points_t *coordDraw = bov_points_new(coord, nPoints, GL_STATIC_DRAW);
+			bov_points_set_color(coordDraw, (GLfloat[4]) {0.0, 0.0, 0.0, 0.5});
+			bov_points_set_outline_color(coordDraw, (GLfloat[4]) {0.3, 0.12, 0.0, 0.25});
+
+			old_time = bov_window_get_time(window);
+
+			while(!bov_window_should_close(window)){
+
+				if (bov_window_get_time(window) - old_time > 0.5) {
+					old_time = bov_window_get_time(window);
+					depth += 1;
+					if (depth > depth_max) {depth = 0;}
+				}
+
+				draw_frame(window, x_low, x_high, y_low, y_high);
+				bov_points_set_width(coordDraw, 0.005);
+				bov_points_draw(window, coordDraw, 0, nPoints);
+				draw_kd_tree(head, window, x_low, x_high, y_low, y_high, depth, depth_max, ANIM_KD_TREE);
+
+				bov_window_update(window);
+			}
+
+			bov_points_delete(coordDraw);
+			free(coord);
+			bov_window_delete(window);
+
+		}
+
+		printf("elapsed time : %ld seconds\n", tac-tic);
+
+		free_kd_tree(head);
 	}
 
-	printf("elapsed time : %ld seconds\n", tac-tic);
-
-	free_kd_tree(head);}
-
-    if (ALGO==2){
+    if (ALGO_SELECTION == 2) {
 
 
         GLfloat (*L)[2] = malloc(sizeof(L)*(nPoints));
@@ -94,7 +100,7 @@ int main()
         }
 
 
-        if (!SHOW){
+        if (!SHOW_ANIM){
             clock_t start = clock();
             int a1 = coordon(nPoints, L);
             clock_t end = clock();
@@ -102,8 +108,8 @@ int main()
             printf("%f \n", seconds);
         }
 
-        if (SHOW) {
-            if (STEP) {
+        if (SHOW_ANIM) {
+            if (STEP_CONVEX_HULL) {
                 GLfloat(*step)[2] = malloc(sizeof(step) * (nPoints) * nPoints);
                 int *a1 = coordonStep(nPoints, L, step);
                 int numb = a1[0];
@@ -192,7 +198,7 @@ int main()
                 bov_window_delete(window);
             }
 
-            if (!STEP) {
+            if (!STEP_CONVEX_HULL) {
                 int numb = coordon(nPoints, L);
                 bov_window_t *window = bov_window_new(800, 800, "My first BOV program");
                 bov_window_set_color(window, (GLfloat[]) {0.9f, 0.85f, 0.8f, 1.0f});
@@ -238,14 +244,5 @@ int main()
         free(L);
     }
 
-
-
-
-
 	return EXIT_SUCCESS;
 }
-
-
-
-
-
