@@ -50,7 +50,6 @@ int main()
 		double old_time;
 		int depth = 0;
 		int depth_max = compute_max_depth(head);
-		printf("%d\n", depth_max);
 
 		// The animation
 		if (SHOW_ANIM) {
