@@ -5,9 +5,9 @@
 
 
 #define SHOW_ANIM 1 // 1 to show the animations, 0 to disable the animations
-#define ALGO_SELECTION 1 // 1 for k-dtree algorithm, 2 for convex hull algorithm
-#define ANIM_KD_TREE 2 // 1 for the first animation, 2 for the second animation for the k-d tree
-#define STEP_CONVEX_HULL 0  // 1 to show the evolution of the algorithm while running, 0 to have directly the result (
+#define ALGO_SELECTION 2 // 1 for k-dtree algorithm, 2 for convex hull algorithm
+#define ANIM_KD_TREE 1 // 1 for the first animation, 2 for the second animation for the k-d tree
+#define STEP_CONVEX_HULL 1  // 1 to show the evolution of the algorithm while running, 0 to have directly the result (
 
 int main()
 {
