@@ -6,8 +6,8 @@
 
 #define SHOW_ANIM 1 // 1 to show the animations, 0 to disable the animations
 #define ALGO_SELECTION 2 // 1 for k-dtree algorithm, 2 for convex hull algorithm
-#define ANIM_KD_TREE 1 // 1 for the first animation, 2 for the second animation for the k-d tree
-#define STEP_CONVEX_HULL 0 // 1 to show the evolution of the algorithm while running, 0 to have directly the result
+#define ANIM_KD_TREE 2 // 1 for the first animation, 2 for the second animation for the k-d tree
+#define STEP_CONVEX_HULL 1 // 1 to show the evolution of the algorithm while running, 0 to have directly the result
 
 int main()
 {
@@ -17,11 +17,11 @@ int main()
 	srand(seed);
 
 	// Random points are created
-	const GLsizei nPoints = 1000;
+	const GLsizei nPoints = 100;
 	GLfloat (*coord)[2] = malloc(sizeof(coord[0])*nPoints);
 	random_points(coord, nPoints);
 
-    if (ALGO_SELECTION == 1) {
+    if (ALGO_SELECTION == 1) { // KdTree
 
 		// We find the max and the min
 		double x_low = coord[0][0], x_high = coord[0][0];
@@ -87,9 +87,9 @@ int main()
 		free_kd_tree(head);
 	}
 
-    if (ALGO_SELECTION == 2) {
+    if (ALGO_SELECTION == 2) { // ConvexHull
 
-
+        // Creation of the list we will work on
         GLfloat (*L)[2] = malloc(sizeof(L)*(nPoints));
 
 
@@ -102,19 +102,22 @@ int main()
 
         if (!SHOW_ANIM){
             clock_t start = clock();
-            int a1 = coordon(nPoints, L);
+            int numb = coordon(nPoints, L);
             clock_t end = clock();
             float seconds = (float)(end - start) / CLOCKS_PER_SEC;
             printf("%f \n", seconds);
         }
 
         if (SHOW_ANIM) {
-            if (STEP_CONVEX_HULL) {
+            if (STEP_CONVEX_HULL) { // display the Convex hull and all the steps of the algorithm
+
+                // Create a list where we will save all the steps done by the program in order to display them
                 GLfloat(*step)[2] = malloc(sizeof(step) * (nPoints) * nPoints);
                 int *a1 = coordonStep(nPoints, L, step);
                 int numb = a1[0];
                 int nbstep = a1[1];
 
+                // Deal with the velocity of the animation
                 double time;
                 if (nPoints > 70) {
                     time = 0.00001;
@@ -132,7 +135,7 @@ int main()
                 bov_points_set_color(coordDraw, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
                 bov_points_set_outline_color(coordDraw, (GLfloat[4]) {0.3, 0.12, 0.0, 0.25});
 
-
+                // List that covers the progress of the  animation
                 GLfloat(*currlist)[2] = malloc(sizeof(currlist) * (nPoints));
                 int numbList = 2;
                 currlist[0][0] = step[0][0];
@@ -140,9 +143,9 @@ int main()
                 currlist[1][0] = step[1][0];
                 currlist[1][1] = step[1][1];
 
-                bov_points_t *cool1 = bov_points_new(currlist, numbList, GL_STATIC_DRAW);
-                bov_points_set_color(cool1, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
-                bov_points_set_outline_color(cool1, (GLfloat[4]) {1.0, 0.0, 0.0, 0.0});
+                bov_points_t *currPoint = bov_points_new(currlist, numbList, GL_STATIC_DRAW);
+                bov_points_set_color(currPoint, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
+                bov_points_set_outline_color(currPoint, (GLfloat[4]) {1.0, 0.0, 0.0, 0.0});
 
 
                 double old_time;
@@ -160,29 +163,29 @@ int main()
                             if (currlist[numbList - 1][0] == step[count][0]) {
                                 currlist[numbList - 2][0] = currlist[numbList - 1][0];
                                 currlist[numbList - 2][1] = currlist[numbList - 1][1];
-                                bov_points_delete(cool1);
+                                bov_points_delete(currPoint);
                                 numbList--;
-                                cool1 = bov_points_new(currlist, numbList, GL_STATIC_DRAW);
+                                currPoint = bov_points_new(currlist, numbList, GL_STATIC_DRAW);
                             } else {
                                 currlist[numbList][0] = step[count][0];
                                 currlist[numbList][1] = step[count][1];
-                                bov_points_delete(cool1);
+                                bov_points_delete(currPoint);
                                 numbList++;
-                                cool1 = bov_points_new(currlist, numbList, GL_STATIC_DRAW);
+                                currPoint = bov_points_new(currlist, numbList, GL_STATIC_DRAW);
                             }
                             count++;
                         }
                     }
-                    bov_points_set_color(cool1, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
-                    bov_points_set_outline_color(cool1, (GLfloat[4]) {1.0, 0.0, 0.0, 0.0});
+                    bov_points_set_color(currPoint, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
+                    bov_points_set_outline_color(currPoint, (GLfloat[4]) {1.0, 0.0, 0.0, 0.0});
 
 
-                    bov_points_set_width(cool1, 0.003);
-                    bov_points_set_outline_width(cool1, 0.002);
+                    bov_points_set_width(currPoint, 0.003);
+                    bov_points_set_outline_width(currPoint, 0.002);
 
-                    bov_line_strip_draw(window, cool1, 0, count);
-                    bov_points_set_width(cool1, 0.01);
-                    bov_points_draw(window, cool1, 0, count);
+                    bov_line_strip_draw(window, currPoint, 0, count);
+                    bov_points_set_width(currPoint, 0.01);
+                    bov_points_draw(window, currPoint, 0, count);
 
                     bov_points_set_outline_width(coordDraw, -1.);
                     bov_points_draw(window, coordDraw, 0, nPoints);
@@ -194,23 +197,24 @@ int main()
                 free(currlist);
                 free(step);
                 bov_points_delete(coordDraw);
-                bov_points_delete(cool1);
+                bov_points_delete(currPoint);
                 bov_window_delete(window);
             }
 
+            // display the final Convex hull
             if (!STEP_CONVEX_HULL) {
                 int numb = coordon(nPoints, L);
                 bov_window_t *window = bov_window_new(800, 800, "My first BOV program");
                 bov_window_set_color(window, (GLfloat[]) {0.9f, 0.85f, 0.8f, 1.0f});
 
                 bov_points_t *coordDraw = bov_points_new(coord, nPoints, GL_STATIC_DRAW);
-                bov_points_t *cool1 = bov_points_new(L, numb, GL_STATIC_DRAW);
+                bov_points_t *hullPoints = bov_points_new(L, numb, GL_STATIC_DRAW);
                 bov_points_set_color(coordDraw, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
                 bov_points_set_outline_color(coordDraw, (GLfloat[4]) {0.3, 0.12, 0.0, 0.25});
 
 
-                bov_points_set_color(cool1, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
-                bov_points_set_outline_color(cool1, (GLfloat[4]) {1.0, 0.0, 0.0, 0.0});
+                bov_points_set_color(hullPoints, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
+                bov_points_set_outline_color(hullPoints, (GLfloat[4]) {1.0, 0.0, 0.0, 0.0});
 
                 while (!bov_window_should_close(window)) {
 
@@ -218,23 +222,23 @@ int main()
                     bov_points_set_outline_width(coordDraw, 0.002);
 
 
-                    bov_points_set_width(cool1, 0.003);
-                    bov_points_set_outline_width(cool1, 0.002);
-                    bov_line_strip_draw(window, cool1, 0, numb);
+                    bov_points_set_width(hullPoints, 0.003);
+                    bov_points_set_outline_width(hullPoints, 0.002);
+                    bov_line_strip_draw(window, hullPoints, 0, numb);
 
 
                     bov_points_set_outline_width(coordDraw, -1.);
                     bov_points_draw(window, coordDraw, 0, nPoints);
 
-                    bov_points_set_width(cool1, 0.01);
-                    bov_points_draw(window, cool1, 0, numb);
+                    bov_points_set_width(hullPoints, 0.01);
+                    bov_points_draw(window, hullPoints, 0, numb);
 
                     bov_window_update(window);
 
 
                 }
                 bov_points_delete(coordDraw);
-                bov_points_delete(cool1);
+                bov_points_delete(hullPoints);
                 bov_window_delete(window);
 
             }
