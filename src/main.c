@@ -17,7 +17,16 @@ int main()
 	srand(seed);
 
 	// Random points are created
-	const GLsizei nPoints = 1000;
+	GLsizei nPoints;
+	if (ALGO_SELECTION == 1) {
+		nPoints = 10000;
+	} else {
+		if (STEP_CONVEX_HULL == 1) {
+			nPoints = 50;
+		} else {
+			nPoints = 10000;
+		}
+	}
 	GLfloat (*coord)[2] = malloc(sizeof(coord[0])*nPoints);
 	random_points(coord, nPoints);
 
