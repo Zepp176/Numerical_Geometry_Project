@@ -4,7 +4,7 @@
 #include <time.h>
 
 
-#define SHOW 1
+#define SHOW 0
 #define ALGO  2 // for k-dtreealgorithm, 2 for convex hull algorithm
 #define STEP 0 // for convex hull : 1 to show the evolution of the algorithm while running, 0 to have directly the result
 
@@ -191,47 +191,47 @@ int main()
                 bov_points_delete(cool1);
                 bov_window_delete(window);
             }
-        }
-        if (!STEP){
-            int numb = coordon(nPoints, L);
-            bov_window_t* window = bov_window_new(800, 800, "My first BOV program");
-            bov_window_set_color(window, (GLfloat[]){0.9f, 0.85f, 0.8f, 1.0f});
 
-            bov_points_t *coordDraw = bov_points_new(coord, nPoints, GL_STATIC_DRAW);
-            bov_points_t *cool1 = bov_points_new(L, numb, GL_STATIC_DRAW);
-            bov_points_set_color(coordDraw, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
-            bov_points_set_outline_color(coordDraw, (GLfloat[4]) {0.3, 0.12, 0.0, 0.25});
+            if (!STEP) {
+                int numb = coordon(nPoints, L);
+                bov_window_t *window = bov_window_new(800, 800, "My first BOV program");
+                bov_window_set_color(window, (GLfloat[]) {0.9f, 0.85f, 0.8f, 1.0f});
 
-
-            bov_points_set_color(cool1, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
-            bov_points_set_outline_color(cool1, (GLfloat[4]) {1.0, 0.0, 0.0, 0.0});
-
-            while (!bov_window_should_close(window)) {
-
-                bov_points_set_width(coordDraw, 0.003);
-                bov_points_set_outline_width(coordDraw, 0.002);
+                bov_points_t *coordDraw = bov_points_new(coord, nPoints, GL_STATIC_DRAW);
+                bov_points_t *cool1 = bov_points_new(L, numb, GL_STATIC_DRAW);
+                bov_points_set_color(coordDraw, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
+                bov_points_set_outline_color(coordDraw, (GLfloat[4]) {0.3, 0.12, 0.0, 0.25});
 
 
+                bov_points_set_color(cool1, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});
+                bov_points_set_outline_color(cool1, (GLfloat[4]) {1.0, 0.0, 0.0, 0.0});
 
-                bov_points_set_width(cool1, 0.003);
-                bov_points_set_outline_width(cool1, 0.002);
-                bov_line_strip_draw(window, cool1, 0, numb);
+                while (!bov_window_should_close(window)) {
+
+                    bov_points_set_width(coordDraw, 0.003);
+                    bov_points_set_outline_width(coordDraw, 0.002);
 
 
-                bov_points_set_outline_width(coordDraw, -1.);
-                bov_points_draw(window, coordDraw, 0, nPoints);
+                    bov_points_set_width(cool1, 0.003);
+                    bov_points_set_outline_width(cool1, 0.002);
+                    bov_line_strip_draw(window, cool1, 0, numb);
 
-                bov_points_set_width(cool1, 0.01);
-                bov_points_draw(window, cool1, 0, numb);
 
-                bov_window_update(window);
+                    bov_points_set_outline_width(coordDraw, -1.);
+                    bov_points_draw(window, coordDraw, 0, nPoints);
 
+                    bov_points_set_width(cool1, 0.01);
+                    bov_points_draw(window, cool1, 0, numb);
+
+                    bov_window_update(window);
+
+
+                }
+                bov_points_delete(coordDraw);
+                bov_points_delete(cool1);
+                bov_window_delete(window);
 
             }
-            bov_points_delete(coordDraw);
-            bov_points_delete(cool1);
-            bov_window_delete(window);
-
         }
 
         free(coord);
