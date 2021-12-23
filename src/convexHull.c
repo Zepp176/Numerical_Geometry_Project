@@ -25,7 +25,7 @@ static int compare_x(const void *a_v, const void *b_v)
     }
 }
 
-int* coordonstep(GLsizei nPoints, GLfloat L[][2], GLfloat step[][2]){
+int* coordonStep(GLsizei nPoints, GLfloat L[][2], GLfloat step[][2]){
 
     qsort(L, nPoints, sizeof(GLfloat)*2, compare_x);
 
