@@ -92,8 +92,6 @@ int main()
         // Creation of the list we will work on
         GLfloat (*L)[2] = malloc(sizeof(L[0])*(nPoints));
 
-
-
         for (int j = 0; j<nPoints;j++){
             L[j][0] = coord[j][0];
             L[j][1] = coord[j][1];
@@ -116,6 +114,7 @@ int main()
                 int *a1 = coordonStep(nPoints, L, step);
                 int numb = a1[0];
                 int nbstep = a1[1];
+				free(a1);
 
                 // Deal with the velocity of the animation
                 double time;
@@ -129,7 +128,6 @@ int main()
 
                 bov_window_t *window = bov_window_new(800, 800, "My first BOV program");
                 bov_window_set_color(window, (GLfloat[]) {0.9f, 0.85f, 0.8f, 1.0f});
-
 
                 bov_points_t *coordDraw = bov_points_new(coord, nPoints, GL_STATIC_DRAW);
                 bov_points_set_color(coordDraw, (GLfloat[4]) {0.0, 0.0, 0.0, 1.0});

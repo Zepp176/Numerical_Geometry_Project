@@ -120,7 +120,7 @@ int* coordonStep(GLsizei nPoints, GLfloat L[][2], GLfloat step[][2]){
     free(Lupp);
 
     int numb = numblow+numbupp;
-    int list[2];
+    int* list = malloc(sizeof(int)*2);
     list[0] = numb;
     list[1] = count;
 
